@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import LandingPage from './LandingPage.jsx'; // 👈 Imported brand new landing page
 import CalendarTab from './CalendarTab.jsx';
 import PollsTab from './PollsTab.jsx';
 import TodoTab from './TodoTab.jsx';
@@ -7,14 +8,20 @@ import ContactsTab from './ContactsTab.jsx';
 import NotFoundPage from './NotFoundPage.jsx';
 
 export default function App() {
+  const [isLanding, setIsLanding] = useState(true); // 👈 Controls initial application gateway
   const [activeTab, setActiveTab] = useState('calendar');
 
   const tabs = [
     { id: 'calendar', name: 'Calendar' },
     { id: 'polls', name: 'Polls' },
     { id: 'todo', name: 'Tasks' },
-    { id: 'contacts', name: 'Team' }, // 👈 Added Contacts/Team item
+    { id: 'contacts', name: 'Team' },
   ];
+
+  // Route gateway interceptor logic
+  if (isLanding) {
+    return <LandingPage onEnterDashboard={() => setIsLanding(false)} />;
+  }
 
   const isValidTab = tabs.some(tab => tab.id === activeTab);
 
@@ -28,12 +35,14 @@ export default function App() {
       {/* 1. Desktop Sidebar Navigation */}
       <aside className="w-64 bg-slate-900 text-white p-6 flex flex-col justify-between hidden md:flex shrink-0">
         <div>
-          <div className="flex items-center gap-3 mb-8 px-2">
-            <svg className="h-7 w-7 text-sky-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M16 20V4a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16" />
-              <rect width="20" height="14" x="2" y="6" rx="2" />
+          <div 
+            onClick={() => setIsLanding(true)} // 👈 Clicking branding returns safely back to landing
+            className="flex items-center gap-3 mb-8 px-2 cursor-pointer group"
+          >
+            <svg className="h-7 w-7 text-sky-400 group-hover:scale-105 transition-transform" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <path d="M16 20V4a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16" /><rect width="20" height="14" x="2" y="6" rx="2" />
             </svg>
-            <h1 className="text-xl font-bold tracking-tight">Worksphere Pro</h1>
+            <h1 className="text-xl font-bold tracking-tight group-hover:text-sky-300 transition-colors">Worksphere Pro</h1>
           </div>
           
           <nav className="space-y-1.5">
@@ -55,18 +64,10 @@ export default function App() {
                     />
                   )}
                   <span className="relative z-10 flex items-center gap-3">
-                    {tab.id === 'calendar' && (
-                      <svg className="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M8 2v4M16 2v4M3 10h18M5 4h14a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2z" /></svg>
-                    )}
-                    {tab.id === 'polls' && (
-                      <svg className="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="18" x2="18" y1="20" y2="10" /><line x1="12" x2="12" y1="20" y2="4" /><line x1="6" x2="6" y1="20" y2="14" /></svg>
-                    )}
-                    {tab.id === 'todo' && (
-                      <svg className="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="m9 11 3 3L22 4" /><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11" /></svg>
-                    )}
-                    {tab.id === 'contacts' && (
-                      <svg className="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" /><circle cx="9" cy="7" r="4" /><path d="M22 21v-2a4 4 0 0 0-3-3.87" /><path d="M16 3.13a4 4 0 0 1 0 7.75" /></svg>
-                    )}
+                    {tab.id === 'calendar' && <svg className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M8 2v4M16 2v4M3 10h18M5 4h14a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2z" /></svg>}
+                    {tab.id === 'polls' && <svg className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="18" x2="18" y1="20" y2="10" /><line x1="12" x2="12" y1="20" y2="4" /><line x1="6" x2="6" y1="20" y2="14" /></svg>}
+                    {tab.id === 'todo' && <svg className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="m9 11 3 3L22 4" /><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11" /></svg>}
+                    {tab.id === 'contacts' && <svg className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" /><circle cx="9" cy="7" r="4" /><path d="M22 21v-2a4 4 0 0 0-3-3.87" /><path d="M16 3.13a4 4 0 0 1 0 7.75" /></svg>}
                     {tab.name === 'Calendar' ? 'Meeting Calendar' : tab.name === 'Tasks' ? 'Task Manager (CRUD)' : tab.name === 'Team' ? 'Team Directory' : 'Team Polls'}
                   </span>
                 </button>
@@ -82,8 +83,8 @@ export default function App() {
 
       {/* 2. Mobile App Header Bar */}
       <header className="md:hidden bg-slate-900 text-white px-4 py-4 flex items-center justify-between sticky top-0 z-40 border-b border-slate-800 shadow-sm">
-        <div className="flex items-center gap-2">
-          <svg className="h-5 w-5 text-sky-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+        <div onClick={() => setIsLanding(true)} className="flex items-center gap-2 cursor-pointer active:opacity-80">
+          <svg className="h-5 w-5 text-sky-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
             <path d="M16 20V4a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16" /><rect width="20" height="14" x="2" y="6" rx="2" />
           </svg>
           <span className="font-bold text-base tracking-tight">Worksphere Pro</span>
@@ -103,7 +104,7 @@ export default function App() {
             {activeTab === 'calendar' && <CalendarTab />}
             {activeTab === 'polls' && <PollsTab />}
             {activeTab === 'todo' && <TodoTab />}
-            {activeTab === 'contacts' && <ContactsTab />} {/* 👈 Added matching display route */}
+            {activeTab === 'contacts' && <ContactsTab />}
           </motion.div>
         </AnimatePresence>
       </main>
@@ -121,18 +122,10 @@ export default function App() {
               }`}
             >
               <div className="relative z-10">
-                {tab.id === 'calendar' && (
-                  <svg className="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M8 2v4M16 2v4M3 10h18M5 4h14a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2z" /></svg>
-                )}
-                {tab.id === 'polls' && (
-                  <svg className="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="18" x2="18" y1="20" y2="10" /><line x1="12" x2="12" y1="20" y2="4" /><line x1="6" x2="6" y1="20" y2="14" /></svg>
-                )}
-                {tab.id === 'todo' && (
-                  <svg className="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="m9 11 3 3L22 4" /><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11" /></svg>
-                )}
-                {tab.id === 'contacts' && (
-                  <svg className="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" /><circle cx="9" cy="7" r="4" /></svg>
-                )}
+                {tab.id === 'calendar' && <svg className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M8 2v4M16 2v4M3 10h18M5 4h14a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2z" /></svg>}
+                {tab.id === 'polls' && <svg className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="18" x2="18" y1="20" y2="10" /><line x1="12" x2="12" y1="20" y2="4" /><line x1="6" x2="6" y1="20" y2="14" /></svg>}
+                {tab.id === 'todo' && <svg className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="m9 11 3 3L22 4" /><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11" /></svg>}
+                {tab.id === 'contacts' && <svg className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" /><circle cx="9" cy="7" r="4" /></svg>}
               </div>
               <span className="text-[10px] tracking-tight relative z-10">{tab.name}</span>
             </button>
